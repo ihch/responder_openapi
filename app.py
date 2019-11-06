@@ -12,7 +12,14 @@ api = responder.API(
         )
 
 
-@api.schema("Pet")
+class Pet(Schema):
+    name = fields.Str()
+
+    def echo(self) -> str:
+        return self.name
+
+
+# @api.schema("Pet")
 class PetSchema(Schema):
     name = fields.Str()
 
@@ -31,10 +38,12 @@ def route(req, resp):
                         schema:
                             $ref: '#/components/schemas/Pet'
     """
-    resp.media = PetSchema().dump({"name": "little orange"})
+    # resp.media = PetSchema().dump({"name": "mito")})
+    resp.media = Pet().dump({"name": "mito"})
 
 
 if __name__ == '__main__':
+    api.add_schema("Pet", Pet)
     api.run()
     # curl http://127.0.0.1:5042/schema.yml -> swagger
-    # curl http://127.0.0.1:5042/ -> {"name": "little orange"}
+    # curl http://127.0.0.1:5042/ -> {"name": "mito"}
